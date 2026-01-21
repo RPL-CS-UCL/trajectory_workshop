@@ -38,3 +38,5 @@ Now change the trajectory to a circular trajectory. An example is given in `main
 ## Real Robot Setup
 
 This is what the students need to submit to the teaching assistants to run their code on the real robot.
+
+
