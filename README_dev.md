@@ -8,6 +8,7 @@ Within the root folder of the repo...
 
 ```
 python3 -m pip install build
+python3 -m build --wheel
 python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
 ```
 
