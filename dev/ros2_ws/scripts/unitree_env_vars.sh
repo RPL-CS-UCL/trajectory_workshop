@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -e
-
 export IFACE="eno1"                 # modify here
 export PC_IP="192.168.123.222/24"   # modify here
 
