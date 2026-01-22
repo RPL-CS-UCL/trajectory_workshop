@@ -209,3 +209,7 @@ __marimo__/
 traj_data/*
 
 .history/*
+# ROS 2 build artifacts
+dev/ros2_ws/install/
+dev/ros2_ws/log/
+dev/ros2_ws/build/
