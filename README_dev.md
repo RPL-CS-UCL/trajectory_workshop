@@ -2,10 +2,14 @@
 
 These are notes on what setup and configuration the real robots need to support the assignments. Students don't have to read this.
 
+## building and installing the python traj_lib library
 
+Within the root folder of the repo...
 
-
-
+```
+python3 -m pip install build
+python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
+```
 
 ## Real Robot Network Configuration
 
