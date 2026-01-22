@@ -111,8 +111,8 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     ros-dev-tools \
     && sudo rm -rf /var/lib/apt/lists/*
 
-RUN cd /home/${USERNAME}/ros_ws/src \
-    && git clone https://github.com/Unitree-Go2-Robot/go2_robot.git -b humble \
+COPY cd /home/${USERNAME}/ros_ws/src \
+    && git clone https://github.com/JLCucumber/unitree_ros2.git -b humble \
     && vcs import < go2_robot/dependencies.repos
 
 RUN cd /home/${USERNAME}/ros_ws \

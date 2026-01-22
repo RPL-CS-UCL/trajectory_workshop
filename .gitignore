@@ -213,3 +213,4 @@ traj_data/*
 dev/ros2_ws/install/
 dev/ros2_ws/log/
 dev/ros2_ws/build/
+.vscode/
