@@ -13,22 +13,30 @@ python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
 ```
 
 ## Docker stuff
-```
+```Bash
 docker build -f docker/Dockerfile -t traj --progress plain .
 mkdir $HOME/docker_mount
 chmod -R 777 $HOME/docker_mount
 docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume /home/data/projects/trajectory_workshop/dev/ros2_ws/scripts:/home/student/ros_ws/scripts --volume /home/data/projects/trajectory_workshop/dev/ros2_ws/src/traj_helper:/home/student/ros_ws/src/traj_helper traj
+
 cd ros_ws
 source install/setup.bash
-colcon build --symlink-install
+colcon build --symlink-install --packages-skip inekf go2_odometry
+export ROBOT_TYPE="Go2"   # Go2 or Go2W
 source scripts/unitree_env_vars.sh # change to your variables b/f
 ```
 
-```
+```Bash
+# Test
+ros2 topic echo /utlidar/robot_odom --field pose.pose
+ros2 topic echo /lf/sportmodestate --field position
+ros2 topic echo /lf/sportmodestate --field imu_state.rpy
+
+
+# Run
 ros2 run unitree_examples_py cmd_vel_to_unitree 
 ros2 run traj_helper trajectory_follower
 ```
-
 
 COPY dev/ros2_ws/src/traj_helper /home/${USERNAME}/ros_ws/src/traj_helper
 
@@ -124,7 +132,14 @@ export CYCLONEDDS_URI='<CycloneDDS>
 </CycloneDDS>'
 ```
 
+2. Not consistant message recieved
 
+When trying to echo data via `ros2 topic echo /utlidar/robot_odom --field pose.pose`, the returned message was "piece-by-piece" instead of being "always comming-in". 
+
+- `sudo ethtool eno1 | grep Speed` -> `Speed: 1000Mb/s`
+- `sudo apt install nload` -> ![alt text](image.png)
+
+Solve: Reboot the robot and Re-run docker container. It should be working now.
 
 ## Notes
 

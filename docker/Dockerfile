@@ -109,6 +109,8 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     tmux \
     tree \
     xauth \
+    iproute2 \
+    iputils-ping \
     ros-dev-tools \
     && sudo rm -rf /var/lib/apt/lists/*
 
@@ -130,6 +132,7 @@ RUN cd /home/${USERNAME}/ros_ws \
 RUN cd /home/${USERNAME}/ && sudo apt-get install python3-pip python3-venv -y \
     && git clone https://github.com/MZandtheRaspberryPi/trajectory_workshop.git \
     && cd trajectory_workshop \
+    && git checkout 49e52640b15263233d7e86ceaec7fd72d8173aea \
     && python3 -m pip install build \
     && python3 -m build --wheel \
     && sudo python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl

@@ -87,7 +87,7 @@ class TrajectoryFollower(Node):
 
             self.start_pt: Point = Point(x=self.start.x, y=self.start.y)
             self.end_pt_goal: Point = Point(x=1.0, y=1.0)
-            self.goal_seconds: float = 5.0
+            self.goal_seconds: float = 1.0
             self.goal_traj: LineTraj = LineTraj(
                 start=self.start_pt, end=self.end_pt_goal, seconds=self.goal_seconds
             )
@@ -157,8 +157,8 @@ def main(args=None):
             cmd_bounds=CMD_BOUNDS, file_path=new_plot_path, show=False
         )
 
-        node.destroy_node()
-        rclpy.shutdown()
+    node.destroy_node()
+    # rclpy.shutdown() # rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
 
 
 if __name__ == "__main__":
