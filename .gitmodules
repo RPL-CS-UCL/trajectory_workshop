@@ -5,3 +5,6 @@
 [submodule "dev/ros2_ws/src/livox_ros_driver2"]
 	path = dev/ros2_ws/src/livox_ros_driver2
 	url = https://github.com/MZandtheRaspberryPi/livox_ros_driver2.git
+[submodule "dev/ros2_ws/src/FAST_LIO_ROS2"]
+	path = dev/ros2_ws/src/FAST_LIO_ROS2
+	url = https://github.com/Ericsii/FAST_LIO_ROS2.git
