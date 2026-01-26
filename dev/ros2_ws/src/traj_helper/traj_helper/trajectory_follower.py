@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 from copy import copy
+import math
 import time
 from typing import Dict
 
@@ -8,6 +9,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from unitree_go.msg import SportModeState
+from nav_msgs.msg import Odometry
 
 from traj_lib.traj_sim import (
     NO_NOISE,
@@ -21,6 +23,19 @@ from traj_lib.traj_sim import (
 from traj_lib.cfg import VX_BOUNDS, VTHETA_BOUNDS, CMD_BOUNDS, enforce_bounds
 from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point
 from traj_lib.traj_vis import TrajVisualizer
+
+
+def quaternion_to_euler(q_w, q_x, q_y, q_z):
+    # Roll (x-axis rotation)
+    roll = math.atan2(2 * (q_w * q_x + q_y * q_z), 1 - 2 * (q_x**2 + q_y**2))
+
+    # Pitch (y-axis rotation)
+    pitch = math.asin(2 * (q_w * q_y - q_z * q_x))
+
+    # Yaw (z-axis rotation)
+    yaw = math.atan2(2 * (q_w * q_z + q_x * q_y), 1 - 2 * (q_y**2 + q_z**2))
+
+    return roll, pitch, yaw
 
 
 def get_cmd(
@@ -46,11 +61,20 @@ class TrajectoryFollower(Node):
 
         # Publisher for cmd_vel
         self.cmd_vel_pub = self.create_publisher(Twist, "cmd_vel", 10)
-
-        # Subscriber for sportmodestate
-        self.sport_state_sub = self.create_subscription(
-            SportModeState, "lf/sportmodestate", self.sport_state_callback, 10
+        self.declare_parameter("state_from_fastlio", False)
+        self.state_from_fastlio = (
+            self.get_parameter("state_from_fastlio").get_parameter().value
         )
+
+        if not state_from_fastlio:
+            # Subscriber for sportmodestate
+            self.state_sub = self.create_subscription(
+                SportModeState, "lf/sportmodestate", self.state_cb, 10
+            )
+        else:
+            self.state_sub = self.create_subscription(
+                Odometry, "Odometry", self.state_cb, 10
+            )
 
         # Timer for publishing cmd_vel at regular intervals
         self.dt = 1 / 20
@@ -73,11 +97,27 @@ class TrajectoryFollower(Node):
         # initialize the requied modules
         self.start: State = None
 
-    def sport_state_callback(self, msg):
-        """Callback for receiving sport mode state"""
-        x = msg.position[0]
-        y = msg.position[1]
-        heading = msg.imu_state.rpy[2]
+    def state_cb(self, msg):
+        """Callback for receiving state"""
+        x, y, heading = (None, None, None)
+        if isinstance(msg, SportModeState):
+            x = msg.position[0]
+            y = msg.position[1]
+            heading = msg.imu_state.rpy[2]
+        elif isinstance(msg, Odometry):
+            x = msg.pose.pose.position.x
+            y = msg.pose.pose.position.y
+            quat_x, quat_y, quat_z, quat_w = (
+                msg.pose.pose.orientation.x,
+                msg.pose.pose.orientation.y,
+                msg.pose.pose.orientation.z,
+                msg.pose.pose.orientation.w,
+            )
+
+            r, p, heading = quaternion_to_euler(quat_w, quat_x, quat_y, quat_z)
+
+        else:
+            raise NotImplementedError
 
         self.current_state = State(x, y, heading)
 

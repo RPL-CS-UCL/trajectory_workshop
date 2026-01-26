@@ -2,3 +2,6 @@
 	path = dev/ros2_ws/src/unitree_ros2
 	url = https://github.com/JLCucumber/unitree_ros2.git
 	branch = master
+[submodule "dev/ros2_ws/src/livox_ros_driver2"]
+	path = dev/ros2_ws/src/livox_ros_driver2
+	url = https://github.com/MZandtheRaspberryPi/livox_ros_driver2.git
