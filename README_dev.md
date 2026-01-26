@@ -38,7 +38,10 @@ ros2 run unitree_examples_py cmd_vel_to_unitree
 ros2 run traj_helper trajectory_follower
 ```
 
-COPY dev/ros2_ws/src/traj_helper /home/${USERNAME}/ros_ws/src/traj_helper
+To bringup with fastlio for odom...
+```Bash
+ros2 launch traj_helper system.launch.py --ros_args -p odom_fastlio:="true" 
+```
 
 ## Real Robot Network Configuration
 

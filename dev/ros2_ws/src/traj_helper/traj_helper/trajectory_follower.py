@@ -73,7 +73,7 @@ class TrajectoryFollower(Node):
             )
         else:
             self.state_sub = self.create_subscription(
-                Odometry, "Odometry", self.state_cb, 10
+                Odometry, "state_estimation", self.state_cb, 10
             )
 
         # Timer for publishing cmd_vel at regular intervals
