@@ -40,16 +40,15 @@ source unitree_cyclonedds_setup.sh enp13s0f1 # something you might find on your 
 source unitree_cyclonedds_setup.sh enxc84d44298f99 # usually used on GO2W with sensor backpack
 ```
 
+Test if things work. On GO2W you should see topics returned by the topic list, and the read motion state will print zeros, but it will recieve messages (Go2W does not run odometry automatically). GO2 topics should print and odometry should print.
+Test if things work:
 ```Bash
-# Test
+ros2 topic list
+
+ros2 run unitree_ros2_example read_motion_state
 ros2 topic echo /utlidar/robot_odom --field pose.pose
 ros2 topic echo /lf/sportmodestate --field position
 ros2 topic echo /lf/sportmodestate --field imu_state.rpy
-
-
-# Run
-ros2 run unitree_examples_py cmd_vel_to_unitree 
-ros2 run traj_helper trajectory_follower
 ```
 
 To bringup with fastlio for odom...
@@ -57,73 +56,7 @@ To bringup with fastlio for odom...
 ros2 launch traj_helper system.launch.py --ros_args -p odom_fastlio:="true" 
 ```
 
-## Real Robot Network Configuration
 
-Connect with network cable on the laptop
-Configure IP & Test Ping
-
-```Bash
-cd {path-to-this-repo}
-cd dev/ros2_ws/
-
-sudo apt update
-sudo apt install -y ros-humble-rmw-cyclonedds-cpp ros-humble-rosidl-generator-dds-idl
-
-source /opt/ros/humble/setup.bash # source ROS2 environment
-colcon build # Compile all packages in the workspace
-```
-
-**Connect with network cable on the laptop**
-
-1. Connect the laptop with Ethernet Cable, run `ifconfig` to find the ethernet connection IP.
-  ```Bash
-  export IFACE="eno1"                 # modify here
-  export PC_IP="192.168.123.222/24"   # modify here
-  ```
-2. Manually Set Ip in `./scripts/unitree_net_setup.sh`. And execute it.
-```Bash
-sudo chmod +x scripts/unitree_net_setup.sh
-./scripts/unitree_net_setup.sh
-```
-
-3. Source workspace, export DDS and net-interface. 
-
-```Bash
-# source ROS2 & ws
-# cd /path/to/project/trajectory_workshop/dev/ros2_ws
-
-source /opt/ros/humble/setup.bash
-source install/setup.bash  
-
-# Export DDS and Network Interface
-export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-export CYCLONEDDS_URI='<CycloneDDS>
-  <Domain>
-    <General>
-      <Interfaces>
-        <NetworkInterface name="eno1" priority="default" multicast="default" />
-      </Interfaces>
-    </General>
-  </Domain>
-  <DDSI2E>
-    <Internal>
-      <MaxSampleSize>2MB</MaxSampleSize>
-    </Internal>
-  </DDSI2E>
-</CycloneDDS>'
-
-```
-4. Test if things work:
-```Bash
-ros2 topic list
-
-ros2 run unitree_ros2_example read_motion_state
-
-
-```
-
-
----
 ## Toubleshooting
 
 1. DDS Buffer Too small
