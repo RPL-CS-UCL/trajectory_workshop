@@ -1,0 +1,21 @@
+# this is a dockerfile to get ros2 humble and build for AMD. ARM is not yet supported due to gazebo binaries not being easily available
+# for deploying on a robot, gazebo is probably unneeded though.
+
+FROM robohike2-jetson
+
+COPY dev/ros2_ws/src/unitree_ros2 /home/${USERNAME}/ros_ws/src/unitree_ros2
+
+RUN rm -rf /home/developer/ros_ws/src/RPL-RoboHike-ROS2
+
+RUN cd /home/${USERNAME}/ros_ws \
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    && colcon build --symlink-install --parallel-workers 4 --cmake-args -DCMAKE_BUILD_TYPE=Release \
+    && source /home/${USERNAME}/ros_ws/install/setup.bash
+
+RUN cd /home/${USERNAME}/ && sudo apt-get install python3-pip python3-venv -y \
+    && git clone https://github.com/MZandtheRaspberryPi/trajectory_workshop.git \
+    && cd trajectory_workshop \
+    && git checkout 49e52640b15263233d7e86ceaec7fd72d8173aea \
+    && python3 -m pip install build \
+    && python3 -m build --wheel \
+    && sudo python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
