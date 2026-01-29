@@ -3,13 +3,14 @@
 
 FROM robohike2-jetson
 
-COPY dev/ros2_ws/src/unitree_ros2 /home/${USERNAME}/ros_ws/src/unitree_ros2
+RUN rm -rf /home/developer/ros_ws/src
+RUN mkdir /home/developer/ros_ws/src
 
-RUN rm -rf /home/developer/ros_ws/src/RPL-RoboHike-ROS2
+COPY dev/ros2_ws/src/unitree_ros2 /home/${USERNAME}/ros_ws/src/unitree_ros2
 
 RUN cd /home/${USERNAME}/ros_ws \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
-    && colcon build --symlink-install --parallel-workers 4 --cmake-args -DCMAKE_BUILD_TYPE=Release \
+    && colcon build --symlink-install --parallel-workers 1 --cmake-args -DCMAKE_BUILD_TYPE=Release \
     && source /home/${USERNAME}/ros_ws/install/setup.bash
 
 RUN cd /home/${USERNAME}/ && sudo apt-get install python3-pip python3-venv -y \

@@ -62,11 +62,9 @@ class TrajectoryFollower(Node):
         # Publisher for cmd_vel
         self.cmd_vel_pub = self.create_publisher(Twist, "cmd_vel", 10)
         self.declare_parameter("state_from_fastlio", False)
-        self.state_from_fastlio = (
-            self.get_parameter("state_from_fastlio").get_parameter().value
-        )
+        self.state_from_fastlio = self.get_parameter("state_from_fastlio").value
 
-        if not state_from_fastlio:
+        if not self.state_from_fastlio:
             # Subscriber for sportmodestate
             self.state_sub = self.create_subscription(
                 SportModeState, "lf/sportmodestate", self.state_cb, 10

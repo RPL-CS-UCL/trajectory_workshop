@@ -26,7 +26,7 @@ def generate_launch_description():
     odom_fastlio = LaunchConfiguration("odom_fastlio")
     declare_odom_fastlio = DeclareLaunchArgument(
         "odom_fastlio",
-        default_value=False,
+        default_value="false",
         description="whether to bring up odom via fast lio, or rely on unitree msg for odom",
     )
 
@@ -51,8 +51,8 @@ def generate_launch_description():
         [
             FindPackageShare("traj_helper"),
             "cfg",
-            "fast_lio",
-            LaunchConfiguration("scan_go2w.yaml"),
+            "fastlio",
+            LaunchConfiguration("fastlio_cfg_file.yaml"),
         ]
     )
 
@@ -71,7 +71,7 @@ def generate_launch_description():
                 launch_arguments={
                     "config_file": fastlio_cfg_file_path,
                     "rviz": "false",
-                    "use_sim_time": use_sim,
+                    "use_sim_time": "false",
                 }.items(),
                 condition=IfCondition(odom_fastlio),
             ),
@@ -87,9 +87,7 @@ def generate_launch_description():
     lvx_file_path = "/home/livox/livox_test.lvx"
     cmdline_bd_code = "livox0000000001"
 
-    user_config_path = (
-        "/home/student/ros_ws/src/livox_ros_driver2/config/MID360_config_go2w_nuc.json"
-    )
+    user_config_path = "/home/developer/ros_ws/src/livox_ros_driver2/config/MID360_config_go2w_nuc.json"
     ################### user configure parameters for ros2 end #####################
 
     livox_ros2_params = [
