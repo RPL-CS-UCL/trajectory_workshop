@@ -52,7 +52,7 @@ def generate_launch_description():
             FindPackageShare("traj_helper"),
             "cfg",
             "fastlio",
-            LaunchConfiguration("fastlio_cfg_file.yaml"),
+            LaunchConfiguration("fastlio_cfg_file"),
         ]
     )
 
